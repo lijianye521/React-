@@ -704,3 +704,23 @@ console.log(schools);
 >
 > 这里使用了展开运算符和对象字面量的相关知识，如果有忘记的，需要复习一下2.4.3
 
+```js
+//把一个对象转化为数组
+const schools = {
+    Yorktown: 10,
+    "Washington & Liberty":2,
+    Wakefield:5
+}
+//Object.keys(object) 返回一个由对象键值组成的数组
+const schoolArray= Object.keys(schools).map(key=>({name:key,wins:schools[key]}))
+/*
+console.log(schoolArray);
+[
+    { name: 'Yorktown', wins: 10 },
+    { name: 'Washington & Liberty', wins: 2 },
+    { name: 'Wakefield', wins: 5 }
+]
+*/  
+```
+
+2
