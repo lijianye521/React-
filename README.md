@@ -130,6 +130,23 @@ console.log(firsAnimal,thirdAnimal)
 
 #### 2.4.3对象字面量增强
 
+对象字面量增强与析构相反，它指把对象重新组合成一体，使用对象字面量增强可以把全局作用域中的一个变量添加到对象中。
+
+一个简单的例子
+
+```js
+const name ="li";
+const age = 22;
+const people = {
+    name ,age
+};
+console.log(people);
+//name 和 age 变成people的键值对 { name: 'li', age: 22 }
+
+```
+
+
+
 ```js
 const name ="Tallac";
 const elevation=9738;
@@ -256,8 +273,7 @@ fetch向randomuser.me发起一个请求，请求成功把响应主体json化，�
         catch(error)
             {
                 console.log(error);
-            }
-        ;
+            };
     }     
 ```
 
@@ -421,4 +437,270 @@ const {log,print} = require("./txt-helpers");
 ```
 
 ## 第三章  JavaScript函数式编程
+
+20世纪50年代后期，一个叫做John McCarthy在lambda演算基础上发明了一种新的编程语言Lisp，Lisp实现了高阶函数的概念。如果函数可以声明为变量，作为参数发给函数，那么这个函数就是一等成员。
+
+### 3.1函数式编程的含义
+
+函数可以用var let或const关键字声明，就像生命字符串、数字等变量一样。当然这个函数也可以用作参数，用作返回值，用作变量等。
+
+### 3.2命令式和声明式
+
+声明式编程是一种编程风格，采用这种风格应用有个显著特点：重点描述该做什么，而不管怎么做。
+
+与其相对的是命令式编程，只关注如何使用代码得到结果。
+
+下面是一个命令式风格解决字符串符合URL格式要求（空格替换为连字符）的例子
+
+```js
+const string ="Restaurants in Hanalei";
+let urlFriendly=""; 
+for(let i=0;i<string.length;i++)
+{
+    string[i]===" "?urlFriendly +="-" : urlFriendly +=string[i];
+}
+console.log(urlFriendly);
+```
+
+在这里我们只关注 如何解决这个问题，这样的程序需要大量的注解，才能理解它的来龙去脉。
+
+```js
+//声明式
+const string2= "Restaurants in Hanalei";
+const urlFriendly2=string2.replace(/ /g,"-");
+console.log(urlFriendly2);
+```
+
+而声明式中，句法本身描述了应该做什么事情，至于怎么做被隐藏了起来。
+
+常规的命令式代码风格构建文档对象模型要创建元素，设置元素到文档中，比较的繁琐。
+
+```js
+const target = document.getElementById("target");
+const wrapper =document.createElement("div");
+const headline =document.createElement("h1");
+wrapper.id="welcome";
+headline.innerText="Hello Wolrd";
+wrapper.appendChild(headline);
+target.appendChild(wrapper);
+```
+
+下面是使用React组件以声明式方式构建DOM。
+
+```react
+const { render}=ReactDOM;
+const Welcome = ()=>(
+<div id ="welcome">
+<h1>Hello World</h1>
+ </div>
+);
+render(<Welcome /> ,document.getElementById("target"));
+```
+
+React是声明式的。这里Welcome组件描述了如何渲染DOM。reder函数使用组件中声明的指令构建DOM。可以清楚的看出我们就是在ID为target的元素中渲染Welcome组件。
+
+### 3.3函数式编程基本概念
+
+下面介绍一些函数式编程的基本概念：不可变性，纯函数，数据转换，高阶函数和递归。
+
+#### 3.3.1不可变性
+
+我们不直接更改原始数据结构，而是创建数据结构的副本，所有操作都使用副本。
+
+```js
+let color_lawn={
+    title:"lawn",
+    color:"#00FF00",
+    rating:0
+};
+// //不好的做法
+// function rateColor(color,rating){
+//     color.rating=rating;
+//     return color;
+// }
+// console.log(rateColor(color_lawn,5).rating);
+// console.log(color_lawn.rating);//这样会改变原有的数据
+const rateColor =function(color,rating){
+    return Object.assign({},color,{rating:rating});
+}
+console.log(rateColor(color_lawn,5).rating);// 5
+console.log(color_lawn.rating);// 0
+```
+
+这里，Object.assign更改颜色的评分，Object.assign就是一台复印机，创建了一个空对象，复制颜色对象，然后付噶副本的评分，这样我们就可以得到一个更改了颜色评分的对象，而原对象没有被更改。
+
+这个函数也可以通过展开运算符和箭头函数来编写。
+
+```js
+const rateColor =(color,rating)=>({
+    ...color,
+    rating
+})
+//注意 返回的对象在一对圆括号内，使用箭头函数一定要这样做，因为箭头不能直接指向一个对象的花括号。
+```
+
+这里再学习一个Array.concat的例子 这个英语的直译就是连接。
+
+```js
+let list =[{title:"Rad Red"},{title:"Lawn"},{title:"Party Pink"}];
+const addColor =function(title,colors){
+    colors.push({title:title});
+    return colors;
+}
+console.log(addColor("Glam Green",list).length);//4
+console.log(list.length);
+console.log(list);
+/*4
+4
+[
+  { title: 'Rad Red' },
+  { title: 'Lawn' },
+  { title: 'Party Pink' },
+  { title: 'Glam Green' }
+]*/
+```
+
+在这个例子中 我们想要在list中添加一个对象 结果却把原数据给更改了
+
+```js
+let list =[{title:"Rad Red"},{title:"Lawn"},{title:"Party Pink"}];
+const addColor =(title,array)=>array.concat({title});
+console.log(addColor("Glam Green",list).length);//4]
+console.log(addColor("Glam Green",list))
+console.log(list.length);
+console.log(list);
+/*
+4
+[
+  { title: 'Rad Red' },
+  { title: 'Lawn' },
+  { title: 'Party Pink' },
+  { title: 'Glam Green' }
+]
+3
+[ { title: 'Rad Red' }, { title: 'Lawn' }, { title: 'Party Pink' } ]
+*/
+```
+
+Array.concat的作用是拼接数组，这里concat方法是接受一个有新颜色的标题构成的对象，把它添加到原数组的副本中。
+
+#### 3.3.2纯函数
+
+纯函数至少接受一个参数，而且始终返回一个值或另一个函数，这种函数没有副作用、不设置全局变量，也不更改应用的状态。纯函数把参数视为不可变数据。
+
+```js
+const frederick = {
+    name:"Frederick Douglass",
+    canRead:false,
+    canWrite:false
+};
+const selfEducate = person=>({
+    ...person,
+    canRead:true,
+    canWrite:true
+})
+console.log(selfEducate(frederick));
+console.log(frederick);
+```
+
+下面是一个更改DOM的非纯函数
+
+```js
+//更改dom的非纯函数
+function Header(text)
+{
+    let h1 = document.createElement("h1");
+    h1.innerText = text;
+    document.body.appendChild(h1);
+
+}
+Header("Header() caused side effects")
+```
+
+在React中，UI使用的纯函数表达，下面这个函数与上面的功能一样，只不过他没有更改DOM。
+
+```react
+const Header = props =><h1>{props.title}</h1>
+```
+
+#### 3.3.3数据转换
+
+在函数式编程中，数据从一种格式转化为另一种格式，我们需要做的是使用函数产出转换后的副本。
+
+若想精通javascript，必须掌握Array.map()和Array.reduce()。
+
+```js
+const schools=["Yorktown","Washington&Liberty","Wakefield"];
+```
+
+##### Array.join()
+
+Array.join()是JavaScript内置的数组方法，作用是从数组中提取出以特定符号分割的字符串。原数组完好无损
+
+```js
+const schools=["Yorktown","Washington&Liberty","Wakefield"];
+
+console.log(schools.join(","));
+```
+
+##### Array.filter()
+
+如果想要定义一个函数,创建一个新数组,存储名称为以W开头的学校,可以使用Array.filter方法
+
+```js
+const wSchools=schools.filter(school=>school[0]==="W");
+console.log(wSchools);
+```
+
+Array.filter是JavaScript中内置的函数，根据数组产出一个新数组，该函数只接受一个参数，这个参数是一个断言（predicate），即始终返回布尔值true或者false的函数。Array.filter在数组的每个元素上调用断言，元素作为参数传给断言，返回值决定是否把这个元素添加到新数组。
+
+若要删除元素，不建议使用Array.splice和Array.pop，而是使用Array.filter
+
+```js
+const cutSchools = (cut,schools)=>schools.filter(school => school !==cut);
+console.log(cutSchools("Yorktown",schools));
+```
+
+##### Array.map()
+
+Array.map这个函数接受的不是断言，而是一个函数。这个函数在每个元素上调用一次，不管返回什么都添加到新数组。
+
+```js
+const highSchools= schools.map(school=>`${school} High school`);
+console.log(highSchools);
+```
+
+其实map函数可以产出任何JavaScript类型的数组，包括对象数组，值数组，嵌套数组和函数数组。
+
+```js
+const highSchools2 = schools.map(school=>({名字:school}))
+console.log(highSchools2);
+```
+
+> [!NOTE]
+>
+> 箭头函数指向一个对象的时候，一定要加括号，箭头函数要么直接指向一个语句，要么指向括号，绝对不会指向对象的花括号。
+
+更换数组中的一个对象，也可以使用map。
+
+```js
+let schools = [
+    {name:"中国矿业大学"},
+    {name:"南京工业大学"},
+    {name:"河南大学"},
+    {name:"北京大学"}
+];
+
+const editName = (oldName,name,arr)=>arr.map(item=>(item.name===oldName ? {...item,name}:item));
+
+
+let updateSchools = editName("河南大学","清华大学",schools);
+
+console.log(updateSchools);
+console.log(schools);
+```
+
+> [!NOTE]
+>
+> 这里使用了展开运算符和对象字面量的相关知识，如果有忘记的，需要复习一下2.4.3
 

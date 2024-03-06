@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+     
+    <div id="target"></div>
+<script  type="text/babel">
+const target = document.getElementById("target");
+const wrapper =document.createElement("div");
+const headline =document.createElement("h1");
+wrapper.id="welcome";
+headline.innerText="Hello Wolrd";
+wrapper.appendChild(headline);
+target.appendChild(wrapper);
+</script>
+</body>
+</html>
