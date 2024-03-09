@@ -677,7 +677,7 @@ const highSchools2 = schools.map(school=>({名字:school}))
 console.log(highSchools2);
 ```
 
-> [!NOTE]
+> [!Caution]
 >
 > 箭头函数指向一个对象的时候，一定要加括号，箭头函数要么直接指向一个语句，要么指向括号，绝对不会指向对象的花括号。
 
@@ -723,4 +723,84 @@ console.log(schoolArray);
 */  
 ```
 
-2
+好的截止目前，我们函数式装备库中还需要最后一个工具把数组转化为原始数据类型和其他对象的能力。
+
+##### Array.reduce()
+
+```js
+reduce(callbackFn)
+reduce(callbackFn, initialValue)
+```
+
+> - [`callbackFn`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#callbackfn)
+>
+>   为数组中每个元素执行的函数。其返回值将作为下一次调用 `callbackFn` 时的 `accumulator` 参数。对于最后一次调用，返回值将作为 `reduce()` 的返回值。该函数被调用时将传入以下参数：[`accumulator`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#accumulator)上一次调用 `callbackFn` 的结果。在第一次调用时，如果指定了 `initialValue` 则为指定的值，否则为 `array[0]` 的值。[`currentValue`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#currentvalue)当前元素的值。在第一次调用时，如果指定了 `initialValue`，则为 `array[0]` 的值，否则为 `array[1]`。[`currentIndex`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#currentindex)`currentValue` 在数组中的索引位置。在第一次调用时，如果指定了 `initialValue` 则为 `0`，否则为 `1`。[`array`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#array)调用了 `reduce()` 的数组本身。
+>
+> - [`initialValue`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#initialvalue) 可选
+>
+>   第一次调用回调时初始化 `accumulator` 的值。如果指定了 `initialValue`，则 `callbackFn` 从数组中的第一个值作为 `currentValue` 开始执行。如果没有指定 `initialValue`，则 `accumulator` 初始化为数组中的第一个值，并且 `callbackFn` 从数组中的第二个值作为 `currentValue` 开始执行。在这种情况下，如果数组为空（没有第一个值可以作为 `accumulator` 返回），则会抛出错误。
+>
+> ### [返回值](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#返回值)
+>
+> 使用“reducer”回调函数遍历整个数组后的结果。
+
+假如我们想找一组数当中最大的那个数，为此我们要把数组转化为数字，这是就要用到reduce
+
+```js
+const ages = [21,18,42,40,64,63,64];
+const maxAge = ages.reduce((max,age)=>{
+    console.log(`${age}>${max}=${age>max}`)
+    return age>max?age:max;
+},0)
+console.log("maxAge:",maxAge)
+//可以简写为
+const maxAge = ages.reduce((max,age)=>(age>max:age,max),0)
+```
+
+reduce函数接受两个参数：一个回调函数和一个初始值，在这个示例中，初始值是0。
+
+有时我们需要把数组规约为一个对象。
+
+```js
+const colors = [
+    {
+        id: '-xekare',
+        title: "rad red",
+        rating: 3
+    },
+    {
+        id: '-jbwsof',
+        title: "big blue",
+        rating: 2
+    },
+    {
+        id: '-prigbj',
+        title: "grizzly grey",
+        rating: 5
+    },
+    {
+        id: '-ryhbhsl',
+        title: "banana",
+        rating: 1
+    }
+];
+const hashColor =colors.reduce((hash,{id,title,rating})=>{
+    hash[id] = {title,rating};
+    return hash;
+},{});
+console.log(hashColor);
+
+```
+
+
+
+##### Array.reduceRight()
+
+> [!NOTE]
+>
+> Array,reduceRight的作用于Array.reduce相同，只不过不从开头开始规约，而是从数组末尾开始。
+
+
+
+
+

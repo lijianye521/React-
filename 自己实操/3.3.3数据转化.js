@@ -28,18 +28,54 @@
 // console.log(updateSchools);
 // console.log(schools);
 //把一个对象转化为数组
-const schools = {
-    Yorktown: 10,
-    "Washington & Liberty":2,
-    Wakefield:5
-}
-//Object.keys(object) 返回一个由对象键值组成的数组
-const schoolArray= Object.keys(schools).map(key=>({name:key,wins:schools[key]}))
-/*
-console.log(schoolArray);
-[
-    { name: 'Yorktown', wins: 10 },
-    { name: 'Washington & Liberty', wins: 2 },
-    { name: 'Wakefield', wins: 5 }
-]
-*/  
+// const schools = {
+//     Yorktown: 10,
+//     "Washington & Liberty":2,
+//     Wakefield:5
+// }
+// //Object.keys(object) 返回一个由对象键值组成的数组
+// const schoolArray= Object.keys(schools).map(key=>({name:key,wins:schools[key]}))
+// /*
+// console.log(schoolArray);
+// [
+//     { name: 'Yorktown', wins: 10 },
+//     { name: 'Washington & Liberty', wins: 2 },
+//     { name: 'Wakefield', wins: 5 }
+// ]
+// */  
+
+
+// const ages = [21,18,42,40,64,63,64];
+// const maxAge = ages.reduce((max,age)=>{
+//     console.log(`${age}>${max}=${age>max}`)
+//     return age>max?age:max;
+// },0)
+// console.log("maxAge:",maxAge)
+
+const colors = [
+    {
+        id: '-xekare',
+        title: "rad red",
+        rating: 3
+    },
+    {
+        id: '-jbwsof',
+        title: "big blue",
+        rating: 2
+    },
+    {
+        id: '-prigbj',
+        title: "grizzly grey",
+        rating: 5
+    },
+    {
+        id: '-ryhbhsl',
+        title: "banana",
+        rating: 1
+    }
+];
+const hashColor =colors.reduce((hash,{id,title,rating})=>{
+    hash[id] = {title,rating};
+    return hash;
+},{});
+console.log(hashColor);
